@@ -112,6 +112,7 @@ function Slow(pos) {
 }
 Slow.prototype.type = "slow";
 
+
 // Lava is initialized based on the character, but otherwise has a
 // size and position
 function Lava(pos, ch) {
@@ -335,6 +336,7 @@ var playerXSpeed = 7;
    this.pos = this.basePos.plus(new Vector(0, wobblePos));
  };
  
+ 
  //sets up horizontal movement.
 var maxStep = 0.05;
 
@@ -504,19 +506,29 @@ function runLevel(level, Display, andThen) {
     }
   });
 }
-
+//Makes levels, Gives player lives, Alerts Win/Loss.
 function runGame(plans, Display) {
-  function startLevel(n) {
+  function startLevel(n, lives) {
     // Create a new level using the nth element of array plans
     // Pass in a reference to Display function, DOMDisplay (in index.html).
     runLevel(new Level(plans[n]), Display, function(status) {
-      if (status == "lost")
-        startLevel(n);
-      else if (n < plans.length - 1)
-        startLevel(n + 1);
-      else
+      if (status == "lost"){
+		  //adds a lives function that gives player 5 lives and alerts them when the game is over.
+		  if (lives > 0){
+			startLevel(n, lives - 1);
+			console.log(lives + ' ' + "lives" + ' ' + "remaining");
+			alert(lives + ' ' + "lives" + ' ' + "remaining");
+		  } else {
+			  console.log("Game Over");
+			  alert("Game Over");
+			  startLevel(0,5);
+		  }
+		} else if (n < plans.length - 1){
+        startLevel(n + 1, lives);
+		} else
         console.log("You win!");
+		alert("You Win!");
     });
   }
-  startLevel(0);
+  startLevel(0,5);
 }
